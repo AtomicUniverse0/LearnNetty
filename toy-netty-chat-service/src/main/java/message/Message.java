@@ -50,7 +50,8 @@ public abstract class Message implements Serializable {
         return messageClasses.get(messageType.getCode());
     }
 
-    private MessageType messageType;
+    public abstract MessageType getMessageType();
+
     private int sequenceId;
 
     private static Map<Integer, Class<?>> messageClasses = new ConcurrentHashMap<>();

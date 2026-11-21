@@ -10,9 +10,13 @@ public class LoginRequestMessage extends Message{
     private String nickname;
 
     public LoginRequestMessage(String userName, String password, String nickname) {
-        super.setMessageType(MessageType.LoginRequestMessage);
         this.userName = userName;
         this.password = password;
         this.nickname = nickname;
+    }
+
+    @Override
+    public MessageType getMessageType() {
+        return MessageType.LoginRequestMessage;
     }
 }
