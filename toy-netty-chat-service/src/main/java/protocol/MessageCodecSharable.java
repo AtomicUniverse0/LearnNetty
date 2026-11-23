@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 // 自定义的编解码器，用于实现自定义的聊天通信协议
 @ChannelHandler.Sharable
 @AllArgsConstructor
-public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
+public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message> {
     public static final int MAGIC = 114514;
     public static final byte VERSION = 1;
 
     // TODO: 读它
     // 这行代码正是 SLF4J 生成的。稍后深入看一下它的内部实现
-    private static final Logger log = LoggerFactory.getLogger(MessageCodec.class);
+    private static final Logger log = LoggerFactory.getLogger(MessageCodecSharable.class);
 
     private SerializeType serializeType;
 

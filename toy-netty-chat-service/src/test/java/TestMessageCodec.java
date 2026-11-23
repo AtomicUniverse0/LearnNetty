@@ -1,13 +1,11 @@
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import message.LoginRequestMessage;
 import org.junit.jupiter.api.Test;
-import protocol.MessageCodec;
+import protocol.MessageCodecSharable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +20,15 @@ public class TestMessageCodec {
         EmbeddedChannel channel = new EmbeddedChannel(
             new LengthFieldBasedFrameDecoder(1024, 12, 4, 0, 0),
             new LoggingHandler(LogLevel.INFO),
-            new MessageCodec(MessageCodec.SerializeType.JDK)
+            new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK)
         );
 
-        LoginRequestMessage loginRequestMessage = new LoginRequestMessage("zhangsan", "114514", "yeshouxianbei");
+        LoginRequestMessage loginRequestMessage = new LoginRequestMessage("zhangsan", "114514");
         channel.writeOutbound(loginRequestMessage);
 
         // 检验 decode 方法
         List<Object> byteBufList = new ArrayList<>();
-        var messageCodec = new MessageCodec(MessageCodec.SerializeType.JDK);
+        var messageCodec = new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK);
         messageCodec.encode(null, loginRequestMessage, byteBufList);
 
         assert byteBufList.size() == 1;

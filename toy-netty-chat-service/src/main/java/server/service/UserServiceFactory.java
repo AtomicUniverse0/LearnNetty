@@ -1,7 +1,7 @@
 package server.service;
 import lombok.Getter;
 
-@Getter
 public abstract class UserServiceFactory {
+    @Getter
     private static final UserService userService = new UserServiceMemoryImpl();
 }

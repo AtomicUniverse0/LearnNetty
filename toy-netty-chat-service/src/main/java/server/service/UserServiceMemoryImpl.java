@@ -12,6 +12,7 @@ public class UserServiceMemoryImpl implements UserService {
         allUserMap.put("wangwu", "123");
         allUserMap.put("zhaoliu", "123");
         allUserMap.put("qianqi", "123");
+        allUserMap.put("lly", "114514");
     }
 
     @Override
