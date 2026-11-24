@@ -19,6 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class ChatClient {
+    private CountDownLatch LOGIN_LATCH = new CountDownLatch(1);
+
     public static void main(String[] args) {
         NioEventLoopGroup group = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
@@ -77,4 +79,6 @@ public class ChatClient {
             group.shutdownGracefully();
         }
     }
+
+
 }

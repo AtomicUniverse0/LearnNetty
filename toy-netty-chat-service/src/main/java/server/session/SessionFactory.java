@@ -2,9 +2,9 @@ package server.session;
 
 import lombok.Getter;
 
-@Getter
 public abstract class SessionFactory {
 
+    @Getter
     private final static Session session = new SessionMemoryImpl();
 
 }
