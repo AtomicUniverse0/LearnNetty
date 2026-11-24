@@ -28,7 +28,8 @@ public abstract class Message implements Serializable {
         GroupChatRequestMessage(10),
         GroupChatResponseMessage(11),
         GroupMembersRequestMessage(12),
-        GroupMembersResponseMessage(13);
+        GroupMembersResponseMessage(13),
+        QuitRequestMessage(14);
 
         private static final Map<Integer, MessageType> CODE_MAP =
                 Arrays.stream(values())

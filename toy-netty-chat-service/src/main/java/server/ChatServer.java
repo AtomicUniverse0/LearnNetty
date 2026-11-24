@@ -39,6 +39,8 @@ public class ChatServer {
                         protected void channelRead0(ChannelHandlerContext ctx, LoginRequestMessage msg) throws Exception {
                             boolean success = UserServiceFactory.getUserService().login(msg.getUserName(), msg.getPassword());
 
+                            log.error("Server receive login msg, username: {}, password:{}", msg.getUserName(), msg.getPassword());
+
                             LoginResponseMessage loginResponseMessage;
                             if(success){
                                 loginResponseMessage = new LoginResponseMessage(true, null);
