@@ -7,14 +7,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import message.LoginRequestMessage;
-import message.LoginResponseMessage;
-import message.Message;
-import message.QuitRequestMessage;
+import message.*;
 import protocol.MessageCodecSharable;
 import protocol.ProcotolFrameDecoder;
 
@@ -47,6 +47,18 @@ public class ChatClient {
                           ch.pipeline().addLast(new ProcotolFrameDecoder());
                           ch.pipeline().addLast(LOGGING_HANDLER);
                           ch.pipeline().addLast(MESSAGE_CODEC);
+                          ch.pipeline().addLast(new IdleStateHandler(0, 7, 0));
+                          ch.pipeline().addLast(new ChannelDuplexHandler(){
+                              @Override
+                              public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+                                  if(evt instanceof IdleStateEvent idleStateEvent){
+                                      if(idleStateEvent.state() == IdleState.WRITER_IDLE){
+                                          log.info("已经7秒没有向服务器发送消息了，发送心跳");
+                                          ctx.writeAndFlush(new PingRequestMessage());
+                                      }
+                                  }
+                              }
+                          });
 
                           // 先不考虑其余情况，加一个登陆的功能
                           ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {

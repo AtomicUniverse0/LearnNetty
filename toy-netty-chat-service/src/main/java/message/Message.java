@@ -29,7 +29,8 @@ public abstract class Message implements Serializable {
         GroupChatResponseMessage(11),
         GroupMembersRequestMessage(12),
         GroupMembersResponseMessage(13),
-        QuitRequestMessage(14);
+        QuitRequestMessage(14),
+        PingRequestMessage(15); // 客户端发送，服务端无需返回
 
         private static final Map<Integer, MessageType> CODE_MAP =
                 Arrays.stream(values())
