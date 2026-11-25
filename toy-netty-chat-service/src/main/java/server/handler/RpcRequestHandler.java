@@ -20,6 +20,7 @@ public class RpcRequestHandler extends SimpleChannelInboundHandler<RpcRequestMes
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequestMessage msg) throws Exception {
         RpcResponseMessage responseMessage = new RpcResponseMessage();
+        responseMessage.setSequenceId(msg.getSequenceId());
         try{
             String interfaceName = msg.getInterfaceName();// 全包名
             Class<?> interfaceClass = Class.forName(interfaceName);
@@ -35,10 +36,15 @@ public class RpcRequestHandler extends SimpleChannelInboundHandler<RpcRequestMes
             responseMessage.setReturnValue(returnValue);
 
         }catch (Exception e){
+            log.error("服务端出现异常: {}", e.getMessage());
             responseMessage.setSuccess(false);
-            responseMessage.setExceptionValue(e);
+//            responseMessage.setExceptionValue(e);
         }
 
-        ctx.writeAndFlush(responseMessage);
+        ctx.writeAndFlush(responseMessage).addListener(future -> {
+            if (!future.isSuccess()) {
+                log.error("RPC 响应发送失败", future.cause());
+            }
+        });
     }
 }

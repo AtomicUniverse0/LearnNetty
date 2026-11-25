@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import message.RpcRequestMessage;
 import protocol.MessageCodecSharable;
 import protocol.ProtocolFrameDecoder;
+import server.handler.RpcResponseHandler;
 
 @Slf4j
 public class RpcClient {
@@ -21,6 +22,7 @@ public class RpcClient {
         // 各种Handler
         var LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
         var MESSAGE_CODEC = new MessageCodecSharable(Config.getSERIALIZE_TYPE());
+        var RpcResponseHandler = new RpcResponseHandler();
 
         MultiThreadIoEventLoopGroup group = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
@@ -33,7 +35,8 @@ public class RpcClient {
                         protected void initChannel(NioSocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new ProtocolFrameDecoder())
                                     .addLast(LOGGING_HANDLER)
-                                    .addLast(MESSAGE_CODEC);
+                                    .addLast(MESSAGE_CODEC)
+                                    .addLast(RpcResponseHandler);
                         }
                     });
             Channel channel = bootstrap.connect("localhost", 8080).sync().channel();
