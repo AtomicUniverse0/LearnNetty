@@ -1,4 +1,4 @@
-package server.service;
+package server.service.user;
 import lombok.Getter;
 
 public abstract class UserServiceFactory {

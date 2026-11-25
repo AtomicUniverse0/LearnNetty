@@ -1,4 +1,4 @@
-package server.service;
+package server.service.user;
 
 /**
  * 用户管理接口

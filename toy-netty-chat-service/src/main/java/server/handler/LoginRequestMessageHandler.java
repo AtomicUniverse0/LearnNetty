@@ -6,8 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import message.LoginRequestMessage;
 import message.LoginResponseMessage;
-import server.ChatServer;
-import server.service.UserServiceFactory;
+import server.service.user.UserServiceFactory;
 import server.session.SessionFactory;
 
 @ChannelHandler.Sharable

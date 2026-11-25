@@ -1,4 +1,4 @@
-package server.service;
+package server.service.user;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
