@@ -3,6 +3,7 @@ package message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -11,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Message implements Serializable {
     @Getter
     @AllArgsConstructor
@@ -52,5 +55,5 @@ public abstract class Message implements Serializable {
     }
     public abstract MessageType getMessageType();
 
-    private int sequenceId;
+    protected int sequenceId;
 }
