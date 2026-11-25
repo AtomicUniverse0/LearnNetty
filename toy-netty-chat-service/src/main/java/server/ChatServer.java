@@ -13,8 +13,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import protocol.MessageCodecSharable;
-import protocol.ProcotolFrameDecoder;
-import protocol.serialize.factory.SerializerFactory;
+import protocol.ProtocolFrameDecoder;
 import server.handler.ChatRequestMessageHandler;
 import server.handler.GroupCreateRequestMessageHandler;
 import server.handler.LoginRequestMessageHandler;
@@ -54,7 +53,7 @@ public class ChatServer {
                                     }
                                 }
                             });
-                            ch.pipeline().addLast(new ProcotolFrameDecoder());
+                            ch.pipeline().addLast(new ProtocolFrameDecoder());
                             ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
                             ch.pipeline().addLast(LOGIN_HANDLER);

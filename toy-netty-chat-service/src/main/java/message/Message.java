@@ -30,7 +30,9 @@ public abstract class Message implements Serializable {
         GroupMembersRequestMessage(12, GroupMembersRequestMessage.class),
         GroupMembersResponseMessage(13, GroupMembersResponseMessage.class),
         QuitRequestMessage(14, QuitRequestMessage.class), // 此字段不参与发送
-        PingRequestMessage(15, PingRequestMessage.class); // 客户端发送，服务端无需回复
+        PingRequestMessage(15, PingRequestMessage.class), // 客户端发送，服务端无需回复
+        RpcRequestMessage(100, RpcRequestMessage.class),
+        RpcResponseMessage(101, RpcResponseMessage.class);
 
         private static final Map<Integer, MessageType> CODE_MAP =
                 Arrays.stream(values())

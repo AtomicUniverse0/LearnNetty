@@ -17,8 +17,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import message.*;
 import protocol.MessageCodecSharable;
-import protocol.ProcotolFrameDecoder;
-import protocol.serialize.factory.SerializerFactory;
+import protocol.ProtocolFrameDecoder;
 
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
@@ -46,7 +45,7 @@ public class ChatClient {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                       @Override
                       protected void initChannel(SocketChannel ch) throws Exception {
-                          ch.pipeline().addLast(new ProcotolFrameDecoder());
+                          ch.pipeline().addLast(new ProtocolFrameDecoder());
                           ch.pipeline().addLast(LOGGING_HANDLER);
                           ch.pipeline().addLast(MESSAGE_CODEC);
                           ch.pipeline().addLast(new IdleStateHandler(0, 7, 0));
