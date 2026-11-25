@@ -6,6 +6,7 @@ import io.netty.handler.logging.LoggingHandler;
 import message.LoginRequestMessage;
 import org.junit.jupiter.api.Test;
 import protocol.MessageCodecSharable;
+import protocol.serialize.factory.SerializerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TestMessageCodec {
         EmbeddedChannel channel = new EmbeddedChannel(
             new LengthFieldBasedFrameDecoder(1024, 12, 4, 0, 0),
             new LoggingHandler(LogLevel.INFO),
-            new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK)
+            new MessageCodecSharable(SerializerFactory.SerializeType.JDK)
         );
 
         LoginRequestMessage loginRequestMessage = new LoginRequestMessage("zhangsan", "114514");
@@ -28,7 +29,7 @@ public class TestMessageCodec {
 
         // 检验 decode 方法
         List<Object> byteBufList = new ArrayList<>();
-        var messageCodec = new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK);
+        var messageCodec = new MessageCodecSharable(SerializerFactory.SerializeType.JDK);
         messageCodec.encode(null, loginRequestMessage, byteBufList);
 
         assert byteBufList.size() == 1;

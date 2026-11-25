@@ -1,5 +1,6 @@
 package server;
 
+import config.Config;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -13,6 +14,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import protocol.MessageCodecSharable;
 import protocol.ProcotolFrameDecoder;
+import protocol.serialize.factory.SerializerFactory;
 import server.handler.ChatRequestMessageHandler;
 import server.handler.GroupCreateRequestMessageHandler;
 import server.handler.LoginRequestMessageHandler;
@@ -25,7 +27,7 @@ public class ChatServer {
         NioEventLoopGroup worker = new NioEventLoopGroup();
 
         var LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-        var MESSAGE_CODEC = new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK);
+        var MESSAGE_CODEC = new MessageCodecSharable(Config.getSERIALIZE_TYPE());
         var LOGIN_HANDLER = new LoginRequestMessageHandler();
         var SEND_HANDLER = new ChatRequestMessageHandler();
         var GROUP_CREATE_HANDLER = new GroupCreateRequestMessageHandler();

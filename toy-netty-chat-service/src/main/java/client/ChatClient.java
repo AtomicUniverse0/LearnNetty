@@ -1,5 +1,6 @@
 package client;
 
+import config.Config;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -17,8 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import message.*;
 import protocol.MessageCodecSharable;
 import protocol.ProcotolFrameDecoder;
+import protocol.serialize.factory.SerializerFactory;
 
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +33,7 @@ public class ChatClient {
     public static void main(String[] args) {
         NioEventLoopGroup group = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable(MessageCodecSharable.SerializeType.JDK);
+        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable(Config.getSERIALIZE_TYPE());
         AtomicBoolean EXIT = new AtomicBoolean(false);
         AtomicBoolean LOGIN = new AtomicBoolean(false);
         AtomicReference<String> LOGIN_REASON = new AtomicReference<>();
@@ -41,6 +42,7 @@ public class ChatClient {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.channel(NioSocketChannel.class);
             bootstrap.group(group);
+            bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                       @Override
                       protected void initChannel(SocketChannel ch) throws Exception {

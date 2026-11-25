@@ -15,22 +15,22 @@ public abstract class Message implements Serializable {
     @Getter
     @AllArgsConstructor
     public enum MessageType{
-        LoginRequestMessage(0),
-        LoginResponseMessage(1),
-        ChatRequestMessage(2),
-        ChatResponseMessage(3),
-        GroupCreateRequestMessage(4),
-        GroupCreateResponseMessage(5),
-        GroupJoinRequestMessage(6),
-        GroupJoinResponseMessage(7),
-        GroupQuitRequestMessage(8),
-        GroupQuitResponseMessage(9),
-        GroupChatRequestMessage(10),
-        GroupChatResponseMessage(11),
-        GroupMembersRequestMessage(12),
-        GroupMembersResponseMessage(13),
-        QuitRequestMessage(14),
-        PingRequestMessage(15); // 客户端发送，服务端无需返回
+        LoginRequestMessage(0, LoginRequestMessage.class),
+        LoginResponseMessage(1, LoginResponseMessage.class),
+        ChatRequestMessage(2, ChatRequestMessage.class),
+        ChatResponseMessage(3, ChatResponseMessage.class),
+        GroupCreateRequestMessage(4, GroupCreateRequestMessage.class),
+        GroupCreateResponseMessage(5, GroupCreateResponseMessage.class),
+        GroupJoinRequestMessage(6, GroupJoinRequestMessage.class),
+        GroupJoinResponseMessage(7, GroupJoinResponseMessage.class),
+        GroupQuitRequestMessage(8, GroupQuitRequestMessage.class),
+        GroupQuitResponseMessage(9, GroupQuitResponseMessage.class),
+        GroupChatRequestMessage(10, GroupChatRequestMessage.class),
+        GroupChatResponseMessage(11, GroupChatResponseMessage.class),
+        GroupMembersRequestMessage(12, GroupMembersRequestMessage.class),
+        GroupMembersResponseMessage(13, GroupMembersResponseMessage.class),
+        QuitRequestMessage(14, QuitRequestMessage.class), // 此字段不参与发送
+        PingRequestMessage(15, PingRequestMessage.class); // 客户端发送，服务端无需回复
 
         private static final Map<Integer, MessageType> CODE_MAP =
                 Arrays.stream(values())
@@ -46,15 +46,9 @@ public abstract class Message implements Serializable {
         }
 
         private final int code;
+        private final Class<?> messageClass;
     }
-
-    public static Class<?> getMessageClass( MessageType messageType){
-        return messageClasses.get(messageType.getCode());
-    }
-
     public abstract MessageType getMessageType();
 
     private int sequenceId;
-
-    private static Map<Integer, Class<?>> messageClasses = new ConcurrentHashMap<>();
 }
