@@ -38,7 +38,7 @@ public class RpcRequestHandler extends SimpleChannelInboundHandler<RpcRequestMes
         }catch (Exception e){
             log.error("服务端出现异常: {}", e.getMessage());
             responseMessage.setSuccess(false);
-//            responseMessage.setExceptionValue(e);
+            responseMessage.setExceptionValue(new Exception("远程调用异常: " + e.getCause().getMessage()));
         }
 
         ctx.writeAndFlush(responseMessage).addListener(future -> {

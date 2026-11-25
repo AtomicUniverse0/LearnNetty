@@ -10,6 +10,8 @@ import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultPromise;
+import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 import message.RpcRequestMessage;
 import protocol.MessageCodecSharable;
@@ -96,15 +98,24 @@ public class RpcClientManager {
                                 args
                         );
 
+                        // 确保发送成功，这样的实现比较方便。。。
                         ChannelFuture channelFuture = getChannel().writeAndFlush(rpcRequestMessage);
+                        channelFuture.sync();
+                        if(!channelFuture.isSuccess()){
+                            log.error("error: ", channelFuture.cause());
+                            throw new RuntimeException(channelFuture.cause());
+                        }
 
-                        channelFuture.addListener( future -> {
-                            if(!future.isSuccess()){
-                                log.error("error: ", future.cause());
-                            }
-                        });
+                        // TODO: 弄懂为何必须放一个 eventLoop() 进去
+                        DefaultPromise<Object> promise = new DefaultPromise<>(channel.eventLoop());
+                        RpcResponseHandler.setNewPromises(rpcRequestMessage.getSequenceId(), promise);
 
-                        return null; // 暂时返回 null, 后面会修改
+                        promise.await(); // 即使出现异常也不会报错。
+                        if(promise.isSuccess()){
+                            return promise.getNow();
+                        }else{
+                            throw new RuntimeException(promise.cause());
+                        }
                     }
                 }
         );
@@ -112,8 +123,8 @@ public class RpcClientManager {
 
     public static void main(String[] args) throws InterruptedException {
         HelloService serviceProxy = getServiceProxy(HelloService.class);
-        serviceProxy.sayHello("张三");
-        serviceProxy.sayHello("李四");
+        log.info("调用成功：" + serviceProxy.sayHello("张三"));
+        log.info("调用成功: " + serviceProxy.sayHello("里斯"));
 
         // 等待移除
         getChannel().closeFuture().sync();
